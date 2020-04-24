@@ -19,7 +19,8 @@ const typeDefs = gql `
 
     type Mission {
         name: String
-        missionPatch(size: PatchSize): String
+        # missionPatch(size: PatchSize): String
+        missionPatch(mission: String, size: PatchSize): String
     }
 
     enum PatchSize {
@@ -39,8 +40,18 @@ const typeDefs = gql `
         launches: [Launch]
     }
 
-    type Query {
+    type LaunchConnection {
+        cursor: String!
+        haseMore: Boolean!
         launches: [Launch]!
+    }
+
+    type Query {
+        #launches: [Launch]!
+        launches(pageSize: Int after: String): LaunchConnection! # pagenation purpose, we need to add cursor
+        """ The number of results to show.Must be >= 1. Default = 20
+            If you add a cursor here, it will only return results _after_ this cursor """
+
         launch(id: ID!): Launch
         me: User
     }
